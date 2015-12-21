@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5 player test</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="m-video">
+        <div>
+            <video class="video" src="" ></video>
+        </div>
+        <div class="control f-cf">
+            <div class="play" >
+                <span class="icon-play3" data-click="play" ></span>
+            </div>
+            <div class="time">
+                <span class="currentTime">00:00</span>
+                <span > / </span>
+                <span class="durationTime">00:00</span>
+            </div>
+            
+                
+            <button class="fscreen" data-click="fscreen">全屏</button>
+            <div class="speed f-cf">
+                <div class="crtSpeed" data-click="changeSpeed">1.0x</div>
+                <ul style="display:none " class="speed-list">
+                    <li class="play-speed" data-click="setSpeed">0.5x</li>
+                    <li class="play-speed" data-click="setSpeed">0.75x</li>
+                    <li class="play-speed" data-click="setSpeed">1.0x</li>
+                    <li class="play-speed" data-click="setSpeed">1.25x</li>
+                    <li class="play-speed" data-click="setSpeed">1.5x</li>
+                </ul>
+            </div>
+            <div class="icon-volume-high"></div>
+            <div class="volume" data-click="setVolume">
+                <div class="crt-volume" data-click="setVolume"></div>
+            </div>
+        </div>
+        <div class="durationBar">
+            <div class="bufferedBar" data-click="setCrtTime">
+                <div class="positionBar" data-click="setCrtTime">
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+    <script type="text/javascript" src="player.js"></script>
+</body>
+</html>
