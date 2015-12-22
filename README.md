@@ -7,3 +7,5 @@
     * 调节音量大小
     * 调节视频播放时间
     * 调节视频播放速度
+
+[dome](http://christeer.com/player)
