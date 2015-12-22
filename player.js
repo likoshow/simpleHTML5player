@@ -10,9 +10,11 @@ var player = (function() {
     var _video
     var _posBar
     var _crtTime
+    var _barLeft
     var _bufBar 
     var _crtVol
     var _mVideo
+    var time = 0
     var _methods = {
         fscreen: function() {
             _fsFuncList.forEach(function(item, index) {
@@ -35,18 +37,8 @@ var player = (function() {
             // target.innerHTML = 'play'
         },
         setCrtTime: function(target, e) {
-            var barLeft = target.getBoundingClientRect()['left']
-            _video.currentTime = (e.clientX - barLeft) / _vWidth * _video.duration
-        },
-        setVolume: function(target, e) {
-            if(target){
-                var barLeft = target.getBoundingClientRect()['left']
-                _video.volume = (e.clientX - barLeft) / _SPEEDBAR_LENGTH
-            }
-
-
-            _crtVol.style.width = _video.volume * _SPEEDBAR_LENGTH + 'px'
-            // console.log(_crtVol)
+            _barLeft = target.getBoundingClientRect()['left']
+            _video.currentTime = (e.clientX - _barLeft) / _vWidth * _video.duration
         },
         setSpeed: function(target) {
             var speed = target.innerHTML
@@ -64,10 +56,50 @@ var player = (function() {
             else{
                 speedList.style.display = 'none'
             }
-        }
+        },
+        
+        setVolume: function(target, e) {
+            if(target){
+                var barLeft = target.getBoundingClientRect()['left']
+                _video.volume = (e.clientX - barLeft) / _SPEEDBAR_LENGTH
+            }
+            _crtVol.style.width = _video.volume * _SPEEDBAR_LENGTH + 'px'
+            var iVol = _doc.querySelector('.silence')
+            if(iVol){
+                iVol.classList.remove('silence')
+            }
+        },
+        setSilence: function(target) {
+            _video.volume  = 0
+            _crtVol.style.width = 0
+            target.classList.add('silence')
+        },
+        choose: function(target, e) {
+                e.stopPropagation()
+                time = 1
+                // _mVideo.onmousemove = _move
+                _mVideo.addEventListener('mousemove', _move, false)
+                _mVideo.addEventListener('mouseup', _release, false)
+                _mVideo.addEventListener('mouseleave', function() {
+                    time = 0
+                    _mVideo.removeEventListener('mousemove', _move, false)
+                }, false)
+            }
 
     }
 
+    var _move = function(e) {
+        console.log(e.target)
+        _posBar.style.width = e.clientX - _barLeft + 'px'
+    }
+    var _release = function(e) {
+        if(time){
+          console.log('release')
+          time = 0
+          _video.currentTime  = (e.clientX - _barLeft) / _vWidth * _video.duration
+          _mVideo.removeEventListener('mousemove', _move, false)  
+        }       
+    }
 
     //初始化
     var init = function(options) {
@@ -82,8 +114,13 @@ var player = (function() {
         _bufBar = _posBar.parentNode
         _crtTime = _doc.querySelector('.' + options.crtTime)
         _durTime = _doc.querySelector('.' + options.durTime)
+        _barLeft = _posBar.getBoundingClientRect()['left']
 
-        _mVideo.onclick = _click
+
+        _mVideo.addEventListener('mousedown', _click, false)  
+
+        // _mVideo.onmousedown = _click
+
         _video.ontimeupdate = _timeUpdate
         _video.onloadedmetadata = _loadedmetadata
     }
@@ -99,15 +136,19 @@ var player = (function() {
         
         var _durBar = _bufBar.parentNode
         _vWidth = _video.videoWidth
+        console.log('_vWidth:',_vWidth)
         _durTime.innerHTML = _formatTime(_video.duration)
         _durBar.style.width = _vWidth + 'px'
         _mVideo.style.width = _vWidth + 'px'
         _methods.setVolume()
     }
     var _timeUpdate = function() {
-        _posBar.style.width = (_video.currentTime / _video.duration * _vWidth) + 'px'
-        _bufBar.style.width = _video.buffered.end(0) / _video.duration * _vWidth + 'px'
-        _crtTime.innerHTML = _formatTime(_video.currentTime)
+        if(!time){
+            _posBar.style.width = (_video.currentTime / _video.duration * _vWidth) + 'px'
+            _bufBar.style.width = _video.buffered.end(0) / _video.duration * _vWidth + 'px'
+            _crtTime.innerHTML = _formatTime(_video.currentTime)
+        }
+        
     }
     var _formatTime = function(time) {
         time = Math.ceil(time)
@@ -118,10 +159,16 @@ var player = (function() {
         return min + ':' + sec
     }
 
+
+
     return {
         init: init
     }
 })()
+
+
+
+
 
 window.onload = function() {
     var options = {
