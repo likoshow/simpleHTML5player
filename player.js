@@ -4,17 +4,17 @@ var player = (function() {
             'mozRequestFullScreen',
             'msRequestFullScreen']
     var _SPEEDBAR_LENGTH = 100
+    var _time = 0
     var _options
     var _vWidth
     var _doc
     var _video
     var _posBar
+    var _bufBar
     var _crtTime
     var _barLeft
-    var _bufBar 
     var _crtVol
     var _mVideo
-    var time = 0
     var _methods = {
         fscreen: function() {
             _fsFuncList.forEach(function(item, index) {
@@ -26,15 +26,13 @@ var player = (function() {
         },
         play: function(target) {
             _video.play()
-            target.className = 'icon-pause2'
+            target.className = _options.pause
             target.dataset['click'] = 'pause'
-            // target.innerHTML = 'pause'
         },
         pause: function(target) {
             _video.pause()
-            target.className = 'icon-play3'
+            target.className = _options.play
             target.dataset['click'] = 'play'
-            // target.innerHTML = 'play'
         },
         setCrtTime: function(target, e) {
             _barLeft = target.getBoundingClientRect()['left']
@@ -57,48 +55,44 @@ var player = (function() {
                 speedList.style.display = 'none'
             }
         },
-        
         setVolume: function(target, e) {
             if(target){
                 var barLeft = target.getBoundingClientRect()['left']
                 _video.volume = (e.clientX - barLeft) / _SPEEDBAR_LENGTH
             }
             _crtVol.style.width = _video.volume * _SPEEDBAR_LENGTH + 'px'
-            var iVol = _doc.querySelector('.silence')
+            var iVol = _doc.querySelector('.' + _options.silence)
             if(iVol){
-                iVol.classList.remove('silence')
+                iVol.classList.remove(_options.silence)
             }
         },
         setSilence: function(target) {
             _video.volume  = 0
             _crtVol.style.width = 0
-            target.classList.add('silence')
+            target.classList.add(_options.silence)
         },
         choose: function(target, e) {
                 e.stopPropagation()
-                time = 1
-                // _mVideo.onmousemove = _move
+                _time = 1
                 _mVideo.addEventListener('mousemove', _move, false)
                 _mVideo.addEventListener('mouseup', _release, false)
-                _mVideo.addEventListener('mouseleave', function() {
-                    time = 0
-                    _mVideo.removeEventListener('mousemove', _move, false)
-                }, false)
+                _mVideo.addEventListener('mouseleave', _release, false)
             }
 
     }
 
     var _move = function(e) {
-        console.log(e.target)
         _posBar.style.width = e.clientX - _barLeft + 'px'
     }
     var _release = function(e) {
-        if(time){
-          console.log('release')
-          time = 0
-          _video.currentTime  = (e.clientX - _barLeft) / _vWidth * _video.duration
-          _mVideo.removeEventListener('mousemove', _move, false)  
-        }       
+            console.log('release')
+            _time = 0
+            _mVideo.removeEventListener('mousemove', _move, false)
+            _mVideo.removeEventListener('mouseup', _release, false)
+            _mVideo.removeEventListener('mouseleave', _release, false)
+            if(e.type === 'mouseup'){
+                _video.currentTime  = (e.clientX - _barLeft) / _vWidth * _video.duration
+            }    
     }
 
     //初始化
@@ -108,7 +102,6 @@ var player = (function() {
         _mVideo = _doc.querySelector('.' + options.mVideo)
         _video = _doc.querySelector('.' + options.video)
         _video.src = options.src
-
         _crtVol = _doc.querySelector('.' + options.crtVol)
         _posBar = _doc.querySelector('.' + options.posBar)
         _bufBar = _posBar.parentNode
@@ -118,15 +111,12 @@ var player = (function() {
 
 
         _mVideo.addEventListener('mousedown', _click, false)  
-
-        // _mVideo.onmousedown = _click
-
-        _video.ontimeupdate = _timeUpdate
-        _video.onloadedmetadata = _loadedmetadata
+        _video.addEventListener('timeupdate', _timeUpdate, false)  
+        _video.addEventListener('loadedmetadata', _loadedmetadata, false)  
     }
 
     var _click = function(e) {
-        var target = e.target || e.srcElement
+        var target = e.target
         var method = target.dataset['click']
         if(method){
             _methods[method](target, e)
@@ -136,19 +126,18 @@ var player = (function() {
         
         var _durBar = _bufBar.parentNode
         _vWidth = _video.videoWidth
-        console.log('_vWidth:',_vWidth)
         _durTime.innerHTML = _formatTime(_video.duration)
         _durBar.style.width = _vWidth + 'px'
         _mVideo.style.width = _vWidth + 'px'
         _methods.setVolume()
     }
     var _timeUpdate = function() {
-        if(!time){
+        //当拖动进度条的时候不自动更新时间
+        if(!_time){
             _posBar.style.width = (_video.currentTime / _video.duration * _vWidth) + 'px'
             _bufBar.style.width = _video.buffered.end(0) / _video.duration * _vWidth + 'px'
             _crtTime.innerHTML = _formatTime(_video.currentTime)
         }
-        
     }
     var _formatTime = function(time) {
         time = Math.ceil(time)
@@ -158,20 +147,13 @@ var player = (function() {
         sec = sec < 10 ? '0' + sec : sec
         return min + ':' + sec
     }
-
-
-
     return {
         init: init
     }
 })()
 
-
-
-
-
 window.onload = function() {
-    var options = {
+    player.init({
         mVideo: 'm-video',
         video:'video',
         crtTime: 'currentTime',
@@ -179,9 +161,9 @@ window.onload = function() {
         posBar: 'positionBar',
         crtSpeedBtn: 'crtSpeed',
         speedList: 'speed-list',
+        pause: 'icon-pause2',
+        play: 'icon-play3',
         crtVol: 'crt-volume',
-        // src: 'test.mp4'
         src: 'http://us.sinaimg.cn/001dqTlljx06XEZPS2nm01040101zBW50k02.mp4?KID=unistore,video&Expires=1450615343&ssig=VO00Hv%2FMVn'
-    }
-    player.init(options)
+    })
 }
