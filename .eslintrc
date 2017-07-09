@@ -1,0 +1,299 @@
+{
+  "rules": {
+    
+    # 不要使用保留字（Infinity， Nan 等） 作为 标识符
+    "no-shadow-restricted-names":  [2],
+    
+    # es6 特有
+    # "computed-property-spacing":   [2],
+    
+    # 不要在 正则中使用空白方括号，如 /^abc[]/
+    "no-empty-character-class":    [2],
+    
+    # 不要有 不是space 和 tab 的空白
+    "no-irregular-whitespace":     [2],
+    
+    # 如果行开头是特殊符合，上一行结尾要有 分号，
+    # 不然会变成一行解析的
+    "no-unexpected-multiline":     [2],
+    
+    # 连续的空行不超过2行
+    "no-multiple-empty-lines":     [2],
+    
+    # 判断的条件不能是确定的值，比如 if(true) 这种代码
+    "no-constant-condition":       [2],
+    
+    # 不要有多余的 ！,比如 !!!isSuccess
+    "no-extra-boolean-cast":       [2],
+    
+    # 不要在 if else 里面声明变量或函数
+    "no-inner-declarations":       [2],
+    
+    # es6 特有
+    # "no-this-before-super":        [2],
+    
+    # 不要先使用后声明
+    "no-use-before-define":        [2],
+    
+    # 不建议使用 Array 构造函数初始化数组，建议用字面量
+    "no-array-constructor":        [2],
+    
+    # 小数不要省略 0，比如 0.3 写成 .3
+    "no-floating-decimal":         [2],
+    
+    # 调试代码的时候，在注释中写入 todo ,fixme, xxx
+    # 会有 warning，方便调试完成后 去除调试代码
+    "no-warning-comments":         [2],
+    
+    # node js回掉函数中特有
+    # "handle-callback-err":         [2],
+    
+    # 某些情况下，不建议用三目运算符
+    # // Bad
+    # var isYes = answer === 1 ? true : false;
+    # // Good
+    # var isYes = answer === 1;
+    "no-unneeded-ternary":         [2],
+    
+    # 某些赋值语句使用 简写
+    # x = x + y 要写成 x += y
+    "operator-assignment":         [2],
+    
+    # 某些代码一行放不下的时候，符号要放第一行结尾
+    # 而不是把符号放到下一行的开头
+    #"operator-linebreak":          [2, "after"],
+    
+    # switch 中的 case 条件不能重复
+    "no-duplicate-case":           [2],
+    
+    # 不合法的正则表达式
+    "no-invalid-regexp":           [2],
+    
+    # !(key in object) 不要写错成 !key in object
+    "no-negated-in-lhs":           [2],
+    
+    #es6 特有
+    #"constructor-super":           [2],
+    
+    # 不要使用复杂的 三目运算表达式 
+    # 比如 var thing = foo ? bar : baz === qux ? quxx : foobar;
+    "no-nested-ternary":           [2],
+    
+    # 不要扩展原生对象
+    "no-extend-native":            [2],
+    
+    # 不要在 if else 中使用 var
+    "block-scoped-var":            [2],
+    
+    # 不要在正则中用 \x1f 这种16进制表示 ASCII表中的特殊字符
+    # \x1f 其实就是 - 号
+    "no-control-regex":            [2],
+    
+    # 不要定义 稀疏数组 ，比如 [1,,,3,,4]
+    "no-sparse-arrays":            [2],
+    
+    # 不要抛错时抛出 字符串，而是要抛错误对象
+    "no-throw-literal":            [2],
+    
+    # 不要在 return 中写语句，只能写表达式
+    "no-return-assign":            [2],
+    
+    # er6
+    # "no-const-assign":             [2],
+    # "no-class-assign":             [2],
+    
+    # 没有必要的括号 会给出 提示
+    "no-extra-parens":             [2],
+    
+    # 正则里面不要有空格
+    "no-regex-spaces":             [2],
+    # 不要在setTimeout(), setInterval() or execScript()
+    # 中用字符串调用，也不要用 eval
+    "no-implied-eval":             [2],
+    
+    # 不要在不需要的时候也使用 call
+    "no-useless-call":             [2],
+    
+    # 不要自己和自己比较
+    "no-self-compare":             [2],
+    
+    # 不要在字符串中写八进制转义序列
+    # ru var foo = "Copyright \251";
+    "no-octal-escape":             [2],
+    
+    # 不要使用包装对象，建议使用基本类型比如：
+    # var stringObject = new String("Hello world");
+    # var numberObject = new Number(33);
+    # var booleanObject = new Boolean(false);
+    "no-new-wrappers":             [2],
+    
+    #node
+    #"no-process-exit":             [2],
+    
+    # 标识符 不要和 catch 中的错误对象 重名
+    "no-catch-shadow":             [2],
+    
+    # if 或者 while 中的判断表达式，不要写错成 赋值语句
+    "no-cond-assign":              [2],
+    
+    # 不是很懂这条规则，大致的意思是不要 覆盖已经声明的函数
+    "no-func-assign":              [2],
+    
+    # 不要把代码写在 return, throw, continue, break 的后面
+    "no-unreachable":              [2],
+    
+    # 不要单独使用 getter 或者 setter
+    "accessor-pairs":              [2],
+    
+    # 不要忘记在 case 中写 break
+    "no-fallthrough":              [2],
+    
+    # node
+    # "no-path-concat":              [2],
+    
+    # require 前面不要加 new
+    "no-new-require":              [2],
+    
+    # 函数名和 () 中间不要有空格
+    "no-spaced-func":              [2],
+    
+    # 多余的赋值
+    "no-unused-vars":              [2],
+    
+    # 不要删除变量
+    "no-delete-var":               [2],
+    
+    # 多余的宾得
+    "no-extra-bind":               [2],
+    
+    # 不要写多余的 分号
+    "no-extra-semi":               [2],
+    
+    #es6
+    # "arrow-spacing":               [2],
+    # "prefer-spread":               [2],
+    
+    # 定义对象要用 字面量
+    "no-new-object":               [2],
+    
+    # 行首不要.
+    "dot-location":                [2, "property"],
+    
+    # 对象中的最后一个属性结尾不要有逗号
+    "comma-dangle":                [0],
+    # 函数的参数不要重复
+    "no-dupe-args":                [2],
+    
+    # 对象的属性不要重复
+    "no-dupe-keys":                [2],
+    
+    # if while 后面一定要有 { }
+    "curly":                       [2, "multi-line"],
+    
+    # 不要复写 catch 中的错误对象
+    "no-ex-assign":                [2],
+    
+    # 不要自己赋值给自己
+    "no-self-assign":              [2],
+    
+    # 声明变量的时候不用赋值undefined
+    "no-undef-init":               [2],
+    
+    # 不要用错 全局对象
+    "no-obj-calls":                [2],
+    
+    # 不要写错typeof 的结果，比如'string' 写成 'strimg'
+    "valid-typeof":                [2],
+    
+    # 不要重复声明变量
+    "no-redeclare":                [2],
+    
+    # 建议在 正则中用\= 代替 =
+    "no-div-regex":                [2],
+    
+    # 不要在一行中写多个语句
+    "no-sequences":                [2],
+    
+    # 逗号不要写到行首
+    "comma-style":                 [2],
+    
+    "no-console":                 [2],
+    
+    # 不要写多余的 {}
+    "no-lone-blocks":              [2],
+    
+    # 代码中不要有 debugger
+    "no-debugger":                 [2],
+    
+    # 不要用 new Function 定义函数
+    "no-new-func":                 [2],
+    
+    # 使用构造函数时候，不要忘记 ()
+    "new-parens":                  [2],
+    
+    # 不要和 null 作比较
+    "no-eq-null":                  [2],
+    
+    # 不要使用为运算
+    "no-bitwise":                  [2],
+    
+    
+    # 不要使用 caller callee
+    "no-caller":                   [2],
+    
+    # 使用 isNaN 判断是不是 NaN
+    "use-isnan":                   [2],
+    
+    # 不要使用 8进制数
+    "no-octal":                    [2],
+    
+    # 不要写 空白的if else while等
+    "no-empty":                    [2],
+    
+    # 不要有 alert
+    "no-alert":                    [2],
+    
+    # 使用变量前，不要忘记声明
+    "no-undef":                    [2],
+    
+    # 不要使用 eval
+    "no-eval":                     [2],
+    
+    # 不要使用 with
+    "no-with":                     [2],
+    
+    # 要使用 === 代替 ==
+    "eqeqeq":                      [2],
+    "semi":  [0],
+    
+    # 要使用单引号
+    "quotes":                      [2, "single"],
+    # 不要 忘记改变 循环条件
+    "no-unmodified-loop-condition": 2,
+    # 对象定义时，有多个属性的话，不要写在一行中
+    "object-property-newline": [2, { "allowMultiplePropertiesPerLine": true }],
+    # 使用单个 var 定义
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "globals": {
+    "require": true,
+    "qcVideo": true,
+    "bootbox": true,
+    "CONFIG": true,
+    "define": true,
+    "player": true,
+    "tools": true,
+    "doT": true,
+    "Vue": true,
+    "T": true
+  },
+  "env": {
+    "node": true,
+    "mocha": true,
+    "jquery": true,
+    "browser": true
+  }
+}

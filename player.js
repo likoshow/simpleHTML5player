@@ -1,4 +1,4 @@
-var player = (function() {
+window.player = (function() {
     var _fsFuncList = ['requestFullscreen', 
             'webkitRequestFullScreen',
             'mozRequestFullScreen',
@@ -10,6 +10,7 @@ var player = (function() {
     var _doc
     var _video
     var _posBar
+    var _durTime
     var _bufBar
     var _crtTime
     var _barLeft
@@ -85,7 +86,6 @@ var player = (function() {
         _posBar.style.width = e.clientX - _barLeft + 'px'
     }
     var _release = function(e) {
-            console.log('release')
             _time = 0
             _mVideo.removeEventListener('mousemove', _move, false)
             _mVideo.removeEventListener('mouseup', _release, false)
@@ -99,7 +99,7 @@ var player = (function() {
     var init = function(options) {
         _doc = document
         _options = options
-        _mVideo = _doc.querySelector('.' + options.mVideo)
+        _mVideo = _doc.querySelector(options.mVideo)
         _video = _doc.querySelector('.' + options.video)
         _video.src = options.src
         _crtVol = _doc.querySelector('.' + options.crtVol)
@@ -122,6 +122,23 @@ var player = (function() {
             _methods[method](target, e)
         }
     }
+
+    var _formatTime = function(time) {
+        time = Math.ceil(time)
+        var min = parseInt(time / 60)
+        min = min < 10 ? '0' + min : min
+        var sec = time % 60
+        sec = sec < 10 ? '0' + sec : sec
+        return min + ':' + sec
+    }
+    var _timeUpdate = function() {
+        //当拖动进度条的时候不自动更新时间
+        if(!_time){
+            _posBar.style.width = _video.currentTime / _video.duration * _vWidth + 'px'
+            _bufBar.style.width = _video.buffered.end(0) / _video.duration * _vWidth + 'px'
+            _crtTime.innerHTML = _formatTime(_video.currentTime)
+        }
+    }
     var _loadedmetadata = function() {
         
         var _durBar = _bufBar.parentNode
@@ -131,39 +148,8 @@ var player = (function() {
         _mVideo.style.width = _vWidth + 'px'
         _methods.setVolume()
     }
-    var _timeUpdate = function() {
-        //当拖动进度条的时候不自动更新时间
-        if(!_time){
-            _posBar.style.width = (_video.currentTime / _video.duration * _vWidth) + 'px'
-            _bufBar.style.width = _video.buffered.end(0) / _video.duration * _vWidth + 'px'
-            _crtTime.innerHTML = _formatTime(_video.currentTime)
-        }
-    }
-    var _formatTime = function(time) {
-        time = Math.ceil(time)
-        var min = parseInt(time / 60)
-        min = min < 10 ? '0' + min : min
-        var sec = time % 60
-        sec = sec < 10 ? '0' + sec : sec
-        return min + ':' + sec
-    }
+
     return {
         init: init
     }
 })()
-
-window.onload = function() {
-    player.init({
-        mVideo: 'm-video',
-        video:'video',
-        crtTime: 'currentTime',
-        durTime: 'durationTime',
-        posBar: 'positionBar',
-        crtSpeedBtn: 'crtSpeed',
-        speedList: 'speed-list',
-        pause: 'icon-pause2',
-        play: 'icon-play3',
-        crtVol: 'crt-volume',
-        src: 'http://us.sinaimg.cn/001dqTlljx06XEZPS2nm01040101zBW50k02.mp4?KID=unistore,video&Expires=1450615343&ssig=VO00Hv%2FMVn'
-    })
-}
